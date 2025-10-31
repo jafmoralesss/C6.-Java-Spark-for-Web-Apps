@@ -1,0 +1,12 @@
+h2 {
+    font-size: 30px;
+    background: red;
+}
+
+#name {
+    background: blue;
+}
+
+.color-green {
+    background: green;
+}

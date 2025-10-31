@@ -9,7 +9,7 @@ import spark.template.mustache.MustacheTemplateEngine;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID; // To generate random IDs
+import java.util.UUID;
 
 public class ItemWebController {
 
@@ -48,23 +48,18 @@ public class ItemWebController {
      * Processes the "Add New Item" form.
      */
     public String handleItemForm(Request req, Response res) {
-        // 1. Get the data from the form's <input> fields
         String name = req.queryParams("itemName");
         String description = req.queryParams("itemDescription");
         String imageUrl = req.queryParams("itemImageUrl");
         double price = Double.parseDouble(req.queryParams("itemPrice"));
 
-        // 2. Create a new item
-        // We generate a random ID since the form doesn't provide one
+
         String id = UUID.randomUUID().toString().substring(0, 8);
         CollectibleItem newItem = new CollectibleItem(id, name, description, price);
 
-        // 3. Save the item using the service
         itemService.createItem(id, newItem);
 
-        // 4. Redirect back to the main page
-        // This is the "Post-Get-Redirect" pattern. It prevents
-        // the form from being submitted twice if the user hits "refresh".
+
         res.redirect("/items-web");
         return null; // The redirect handles the response
     }

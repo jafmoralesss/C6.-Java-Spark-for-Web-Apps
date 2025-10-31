@@ -3,9 +3,12 @@ package org.example;
 import com.google.gson.Gson;
 import org.example.Controller.ItemController;
 import org.example.Controller.ItemWebController; // <-- IMPORT THIS
+import org.example.Controller.OfferController;
+import org.example.Controller.OfferWebController;
 import org.example.Model.ApiError;
 import org.example.Model.ApiException;
 import org.example.Model.ItemService;
+import org.example.Model.OfferService;
 
 import static spark.Spark.*;
 
@@ -14,13 +17,17 @@ public class ApiService {
     public static void main(String[] args) {
 
         ItemService itemService = new ItemService();
+        OfferService offerService = new OfferService();
         Gson gson = new Gson();
 
         ItemController itemController = new ItemController(itemService);
+        OfferController offerController = new OfferController(offerService);
 
-        ItemWebController itemWebController = new ItemWebController(itemService); // <-- CREATE NEW CONTROLLER
+        ItemWebController itemWebController = new ItemWebController(itemService);
+        OfferWebController offerWebController = new OfferWebController(offerService);
 
         port(4567);
+        staticFiles.location("/public");
 
         exception(ApiException.class, (exception, req, res) -> {
             res.status(exception.getStatusCode());
@@ -42,8 +49,17 @@ public class ApiService {
         delete("/items/:id", itemController::deleteItem);
         options("/items/:id", itemController::checkItem);
 
-        get("/items-web", itemWebController::showItemsPage); // <-- ADD THIS
-        post("/items-web", itemWebController::handleItemForm); // <-- ADD THIS
+        get("/offers", offerController::getAllOffers);
+        get("/offers/:id", offerController::getOfferById);
+        post("/offers/:id", offerController::createOffer);
+        put("/offers/:id", offerController::updateOffer);
+        delete("/offers/:id", offerController::deleteOffer);
+        options("/offers/:id", offerController::checkOffer);
+
+        get("/items-web", itemWebController::showItemsPage);
+        post("/items-web", itemWebController::handleItemForm);
+
+        post("/offers-web", offerWebController::handleOfferForm);
 
     }
 }

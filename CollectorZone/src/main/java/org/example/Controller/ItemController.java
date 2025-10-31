@@ -46,7 +46,6 @@ public class ItemController {
                 throw new JsonSyntaxException("Empty request body");
             }
         } catch (JsonSyntaxException e) {
-            // Throw our own exception for bad data
             throw new ApiException(400, "Invalid item data format");
         }
 
@@ -69,7 +68,6 @@ public class ItemController {
             throw new ApiException(400, "Invalid item data format");
         }
 
-        // No more if/else! The service handles the 404 error.
         CollectibleItem updatedItem = itemService.updateItem(id, itemToUpdate);
         return gson.toJson(updatedItem);
     }

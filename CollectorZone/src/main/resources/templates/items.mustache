@@ -2,29 +2,35 @@
 <html lang="en">
 <head>
     <title>CollectorZone</title>
+    <link rel="stylesheet" href="/styles/global.css">
 </head>
 <body>
 <h1>Welcome to CollectorZone, {{name}}!</h1>
 
 <hr>
 
-<h2>Add New Item</h2>
-<form action="/items-web" method="POST">
+<h2>Add Offer to Item</h2>
+<form action="/offers-web" method="POST">
     <div>
-        <label for="itemName">Item Name:</label>
-        <input type="text" id="itemName" name="itemName" placeholder="Vintage Star Wars Figure">
+        <label for="item-id">Item:</label>
+        <select id="item-id" name="item-id" required>
+            <option></option>
+            {{# items}}
+                <option value="{{id}}">{{name}}</option>
+            {{/ items}}
+        </select>
     </div>
     <div>
-        <label for="itemDescription">Description:</label>
-        <input type="text" id="itemDescription" name="itemDescription" placeholder="Original 1977 Luke Skywalker">
+        <label for="name">name:</label>
+        <input type="text" id="name" name="name" placeholder="Juan Lucio" required>
     </div>
     <div>
-        <label for="itemImageUrl">Image URL:</label>
-        <input type="text" id="itemImageUrl" name="itemImageUrl" placeholder="http://example.com/luke.jpg">
+        <label for="email">email:</label>
+        <input class="color-green" type="email" id="email" name="email" placeholder="juanLucio@gmail.com" required>
     </div>
     <div>
         <label for="itemPrice">Price:</label>
-        <input type="number" id="itemPrice" name="itemPrice" step="0.01" placeholder="75.50">
+        <input class="color-green" type="number" id="itemPrice" name="itemPrice" step="0.01" placeholder="75.50" required>
     </div>
     <button type="submit">Add Item</button>
 </form>
@@ -37,7 +43,6 @@
         <h3>{{name}} (ID: {{id}})</h3>
         <p>{{description}}</p>
         <p><strong>Price: ${{price}}</strong></p>
-        <img src="{{imageUrl}}" alt="{{name}}" width="100">
     </div>
     <hr>
 {{/items}}
