@@ -1,103 +1,96 @@
 package org.example.Controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.example.Model.CollectibleItem;
 import org.example.Model.ItemService;
+import org.example.Model.ApiException;
 import spark.Request;
 import spark.Response;
 
 import java.util.Map;
-import java.util.Optional;
+
 
 public class ItemController {
 
     private final ItemService itemService;
     private final Gson gson = new Gson();
 
-    public ItemController (ItemService itemService) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
-    public String getAllItems (Request req, Response res) {
+    public String getAllItems(Request req, Response res) {
         res.type("application/json");
         return gson.toJson(itemService.getAllItems());
     }
 
-    public String getItemById (Request req, Response res){
+    public String getItemById(Request req, Response res) {
         res.type("application/json");
         String id = req.params(":id");
 
-        Optional<CollectibleItem> item = itemService.getItemById(id);
-
-        if (item.isPresent()) {
-            return gson.toJson(item.get());
-        } else {
-            res.status(404);
-            return gson.toJson(Map.of("error", "Item not found"));
-        }
+        CollectibleItem item = itemService.getItemById(id);
+        return gson.toJson(item);
     }
 
-    public String createItem(Request req, Response res){
+    public String createItem(Request req, Response res) {
         res.type("application/json");
         String id = req.params(":id");
 
+        CollectibleItem newItem;
         try {
-            CollectibleItem newItem = gson.fromJson(req.body(), CollectibleItem.class);
-            CollectibleItem createdItem = itemService.createItem(id, newItem);
 
-            if (createdItem == null) {
-                res.status(409);
-                return gson.toJson(Map.of("error", "Item with this ID already exists"));
+            newItem = gson.fromJson(req.body(), CollectibleItem.class);
+            if (newItem == null) {
+
+                throw new JsonSyntaxException("Empty request body");
             }
-
-            res.status(201);
-            return gson.toJson(createdItem);
-        } catch (Exception e){
-            res.status(400);
-            return gson.toJson(Map.of("error", "Invalid item data format"));
+        } catch (JsonSyntaxException e) {
+            // Throw our own exception for bad data
+            throw new ApiException(400, "Invalid item data format");
         }
+
+        CollectibleItem createdItem = itemService.createItem(id, newItem);
+        res.status(201);
+        return gson.toJson(createdItem);
     }
 
     public String updateItem(Request req, Response res) {
         res.type("application/json");
         String id = req.params(":id");
 
+        CollectibleItem itemToUpdate;
         try {
-            CollectibleItem itemToUpdate= gson.fromJson(req.body(), CollectibleItem.class);
-            Optional<CollectibleItem> updatedItem = itemService.updateItem(id, itemToUpdate);
-
-            if (updatedItem.isPresent()) {
-                return gson.toJson(updatedItem.get());
-            } else {
-                res.status(404);
-                return gson.toJson(Map.of("error", "Item not found, cannot update"));
+            itemToUpdate = gson.fromJson(req.body(), CollectibleItem.class);
+            if (itemToUpdate == null) {
+                throw new JsonSyntaxException("Empty request body");
             }
         } catch (Exception e) {
-            res.status(400);
-            return gson.toJson(Map.of("error", "Invalid item data format"));
+            throw new ApiException(400, "Invalid item data format");
         }
+
+        // No more if/else! The service handles the 404 error.
+        CollectibleItem updatedItem = itemService.updateItem(id, itemToUpdate);
+        return gson.toJson(updatedItem);
     }
 
-    public String deleteItem(Request req, Response res){
+    public String deleteItem(Request req, Response res) {
         res.type("application/json");
         String id = req.params(":id");
 
-        if (itemService.deleteItem(id)) {
-            return gson.toJson(Map.of("message", "Item deleted successfully"));
-        } else {
-            res.status(404);
-            return gson.toJson(Map.of("error", "Item not found"));
-        }
+        itemService.deleteItem(id);
+
+
+        return gson.toJson(Map.of("message", "Item deleted successfully"));
     }
 
-    public String checkItem (Request req, Response res) {
-        String id= req.params(":id");
-        if(itemService.itemExists(id)) {
-            res.status(200);
-            return "Item exists";
-        } else {
-            res.status(404);
-            return "Item not found";
-        }
+    public String checkItem(Request req, Response res) {
+        String id = req.params(":id");
+
+        itemService.itemExists(id);
+
+
+        res.status(200);
+        return "Item exists";
     }
 }

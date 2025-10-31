@@ -4,18 +4,16 @@ public class CollectibleItem {
     private String id;
     private String name;
     private String description;
-    private String imageUrl;
     private double price;
 
     public CollectibleItem () {
 
     }
 
-    public CollectibleItem (String id, String name, String description, String imageUrl, double price){
+    public CollectibleItem (String id, String name, String description, double price){
         this.id = id;
         this.name = name;
         this.description = description;
-        this.imageUrl = imageUrl;
         this.price = price;
     }
 
@@ -41,14 +39,6 @@ public class CollectibleItem {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public double getPrice() {

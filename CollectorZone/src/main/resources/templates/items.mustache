@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CollectorZone</title>
+</head>
+<body>
+<h1>Welcome to CollectorZone, {{name}}!</h1>
+
+<hr>
+
+<h2>Add New Item</h2>
+<form action="/items-web" method="POST">
+    <div>
+        <label for="itemName">Item Name:</label>
+        <input type="text" id="itemName" name="itemName" placeholder="Vintage Star Wars Figure">
+    </div>
+    <div>
+        <label for="itemDescription">Description:</label>
+        <input type="text" id="itemDescription" name="itemDescription" placeholder="Original 1977 Luke Skywalker">
+    </div>
+    <div>
+        <label for="itemImageUrl">Image URL:</label>
+        <input type="text" id="itemImageUrl" name="itemImageUrl" placeholder="http://example.com/luke.jpg">
+    </div>
+    <div>
+        <label for="itemPrice">Price:</label>
+        <input type="number" id="itemPrice" name="itemPrice" step="0.01" placeholder="75.50">
+    </div>
+    <button type="submit">Add Item</button>
+</form>
+
+<hr>
+
+<h2>Current Collection</h2>
+{{#items}}
+    <div>
+        <h3>{{name}} (ID: {{id}})</h3>
+        <p>{{description}}</p>
+        <p><strong>Price: ${{price}}</strong></p>
+        <img src="{{imageUrl}}" alt="{{name}}" width="100">
+    </div>
+    <hr>
+{{/items}}
+
+{{^items}}
+    <p>No items in the collection yet. Add one above!</p>
+{{/items}}
+</body>
+</html>
