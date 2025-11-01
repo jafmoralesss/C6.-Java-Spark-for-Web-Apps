@@ -2,22 +2,25 @@ package org.example.Controller;
 
 import org.example.Model.CollectibleItem;
 import org.example.Model.ItemService;
+import org.example.Model.Offer;
+import org.example.Model.OfferService;
+import org.example.dto.ItemWebResponse;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.mustache.MustacheTemplateEngine;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ItemWebController {
 
     private final ItemService itemService;
+    private final OfferService offerService;
     private final MustacheTemplateEngine templateEngine = new MustacheTemplateEngine();
 
-    public ItemWebController(ItemService itemService) {
+    public ItemWebController(ItemService itemService, OfferService offerService) {
         this.itemService = itemService;
+        this.offerService = offerService;
     }
 
     /**
@@ -25,21 +28,28 @@ public class ItemWebController {
      * Shows the main page with the form and the list of items.
      */
     public String showItemsPage(Request req, Response res) {
-        // 1. Create the model (a simple HashMap)
+
         Map<String, Object> model = new HashMap<>();
 
-        // 2. Get all items from the service
-        var allItems = itemService.getAllItems();
+        Collection<CollectibleItem> allItems = itemService.getAllItems();
 
-        // 3. Put the list of items and any other data into the model
-        model.put("items", allItems);
-        model.put("name", "Jafet"); // This fills {{name}} in the template
+        List<ItemWebResponse> itemsWeb = allItems.stream().map(i -> {
+            ItemWebResponse itemWeb = new ItemWebResponse();
+            itemWeb.setId(i.getId());
+            itemWeb.setName(i.getName());
+            itemWeb.setDescription(i.getDescription());
+            itemWeb.setPrice(i.getPrice());
+            Optional<Offer> lastOffer = offerService.getLastOffer(UUID.fromString(i.getId()));
+            lastOffer.ifPresent(offer -> itemWeb.setLastOffer(offer.getPrice()));
 
-        // 4. Create a ModelAndView object
-        // This tells Spark to use the "items.mustache" template
+            return itemWeb;
+        }).toList();
+
+        model.put("items", itemsWeb);
+
         ModelAndView mav = new ModelAndView(model, "items.mustache");
 
-        // 5. Render the template and return the HTML
+
         return templateEngine.render(mav);
     }
 

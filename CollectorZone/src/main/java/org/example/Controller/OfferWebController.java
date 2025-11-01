@@ -6,6 +6,7 @@ import org.example.Model.OfferService;
 import spark.Request;
 import spark.Response;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class OfferWebController {
@@ -23,7 +24,7 @@ public class OfferWebController {
         String itemId  = req.queryParams("item-id");
         UUID id = UUID.randomUUID();
 
-        Offer newOffer = new Offer(name, email, id, price, itemId);
+        Offer newOffer = new Offer(name, email, id, price, itemId, new Date());
 
         offerService.createOffer(newOffer);
 

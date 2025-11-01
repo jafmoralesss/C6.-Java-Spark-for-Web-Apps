@@ -35,6 +35,14 @@ public class OfferController {
         return gson.toJson(offer);
     }
 
+    public String getLastOffer (Request req, Response res){
+        res.type("application/json");
+        UUID id = UUID.fromString(req.params(":id"));
+
+        Offer offer = offerService.getLastOffer(id).orElseThrow(() -> new ApiException(404, "Offer not found"));
+        return gson.toJson(offer);
+    }
+
     public String createOffer(Request req, Response res) {
         res.type("application/json");
         String itemId = req.params(":id");

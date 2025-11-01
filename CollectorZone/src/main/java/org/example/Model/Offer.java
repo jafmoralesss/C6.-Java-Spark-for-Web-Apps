@@ -1,5 +1,6 @@
 package org.example.Model;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class Offer {
@@ -9,15 +10,17 @@ public class Offer {
     private UUID id;
     private double price;
     private String itemId;
+    private Date createdAt;
 
     public Offer() {}
 
-    public Offer(String name, String email, UUID id, double price, String itemId) {
+    public Offer(String name, String email, UUID id, double price, String itemId, Date createdAt) {
         this.name = name;
         this.email = email;
         this.id = id;
         this.price = price;
         this.itemId = itemId;
+        this.createdAt = createdAt;
     }
 
     public String getName() {
@@ -58,6 +61,14 @@ public class Offer {
 
     public void setItemId(String itemId) {
         this.itemId = itemId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }
 

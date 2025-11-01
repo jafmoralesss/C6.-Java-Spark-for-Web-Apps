@@ -23,7 +23,7 @@ public class ApiService {
         ItemController itemController = new ItemController(itemService);
         OfferController offerController = new OfferController(offerService);
 
-        ItemWebController itemWebController = new ItemWebController(itemService);
+        ItemWebController itemWebController = new ItemWebController(itemService, offerService);
         OfferWebController offerWebController = new OfferWebController(offerService);
 
         port(4567);
@@ -51,6 +51,7 @@ public class ApiService {
 
         get("/offers", offerController::getAllOffers);
         get("/offers/:id", offerController::getOfferById);
+        get("/offers/:id/lastest", offerController::getLastOffer);
         post("/offers/:id", offerController::createOffer);
         put("/offers/:id", offerController::updateOffer);
         delete("/offers/:id", offerController::deleteOffer);
