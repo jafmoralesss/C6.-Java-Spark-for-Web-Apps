@@ -29,6 +29,8 @@ public class ApiService {
         port(4567);
         staticFiles.location("/public");
 
+        webSocket("/notifications", WebSocketHandler.class);
+
         exception(ApiException.class, (exception, req, res) -> {
             res.status(exception.getStatusCode());
             res.type("application/json");

@@ -29,6 +29,8 @@ public class OfferService {
 
         offer.setId(UUID.randomUUID());
         offerDatabase.put(offer.getId(), offer);
+        String message = "¡NEW OFFER! Amount: " + offer.getPrice() + " on " + offer.getCreatedAt();
+        BroadcastService.broadcast(message);
         return offer;
     }
 
@@ -64,4 +66,5 @@ public class OfferService {
                 .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
                 .findFirst();
     }
+
 }

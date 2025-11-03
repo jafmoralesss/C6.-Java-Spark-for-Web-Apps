@@ -3,8 +3,14 @@
 <head>
     <title>CollectorZone</title>
     <link rel="stylesheet" href="/styles/global.css">
+    <script src="/scripts/websocket.js" type="module"></script>
 </head>
 <body>
+<dialog id="ws-modal">
+    <p id="ws-message"></p>
+    <button id="ws-button">Refresh</button>
+</dialog>
+
 <h1>Welcome to CollectorZone, {{name}}!</h1>
 
 <hr>
