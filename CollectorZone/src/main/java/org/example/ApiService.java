@@ -17,7 +17,8 @@ public class ApiService {
     public static void main(String[] args) {
 
         ItemService itemService = new ItemService();
-        OfferService offerService = new OfferService();
+        OfferService offerService = new OfferService(itemService);
+
         Gson gson = new Gson();
 
         ItemController itemController = new ItemController(itemService);
