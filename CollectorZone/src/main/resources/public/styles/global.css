@@ -1,4 +1,3 @@
-/* --- Globales y Fondo Vibrante --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -230,4 +229,30 @@ dialog::backdrop {
 
 #ws-button:hover {
     background-color: #1a5cbf;
+}
+
+.error-box {
+    background-color: rgba(255, 235, 238, 0.8); /* Rojo claro semi-transparente */
+    border: 1px solid #c0392b;
+    color: #c0392b; /* Rojo oscuro */
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+
+    /* Centrado, igual que tu formulario */
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.success-box {
+    background-color: rgba(232, 245, 233, 0.8); /* Verde claro semi-transparente */
+    border: 1px solid #28a745;
+    color: #155724; /* Verde oscuro */
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+
+    /* Centrado, igual que tu formulario */
+    max-width: 600px;
+    margin: 20px auto;
 }

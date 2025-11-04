@@ -31,6 +31,16 @@ public class ItemWebController {
 
         Map<String, Object> model = new HashMap<>();
 
+        String error = req.queryParams("error");
+        if (error != null && !error.isEmpty()) {
+            model.put("error", error);
+        }
+
+        String success = req.queryParams("success");
+        if (success != null && !success.isEmpty()) {
+            model.put("success", success);
+        }
+
         Collection<CollectibleItem> allItems = itemService.getAllItems();
 
         List<ItemWebResponse> itemsWeb = allItems.stream().map(i -> {

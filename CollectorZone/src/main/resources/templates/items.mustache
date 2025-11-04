@@ -11,9 +11,23 @@
     <button id="ws-button">Refresh</button>
 </dialog>
 
-<h1>Welcome to CollectorZone, {{name}}!</h1>
+<h1>Welcome to CollectorZone {{name}}!</h1>
 
 <hr>
+
+{{#error}}
+    <div class="error-box">
+        <strong>Error:</strong> {{error}}
+    </div>
+{{/error}}
+
+{{#success}}
+    <div class="success-box">
+        <strong>Success:</strong> {{success}}
+    </div>
+{{/success}}
+
+<form action="/offers-web" method="POST" class="glass-card">
 
 <h2>Add Offer to Item</h2>
 <form action="/offers-web" method="POST" class="glass-card">
