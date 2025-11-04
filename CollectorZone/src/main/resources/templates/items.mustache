@@ -16,7 +16,7 @@
 <hr>
 
 <h2>Add Offer to Item</h2>
-<form action="/offers-web" method="POST">
+<form action="/offers-web" method="POST" class="glass-card">
     <div>
         <label for="item-id">Item:</label>
         <select id="item-id" name="item-id" required>
@@ -32,11 +32,11 @@
     </div>
     <div>
         <label for="email">email:</label>
-        <input class="color-green" type="email" id="email" name="email" placeholder="juanLucio@gmail.com" required>
+        <input type="email" id="email" name="email" placeholder="juanLucio@gmail.com" required>
     </div>
     <div>
         <label for="itemPrice">Price:</label>
-        <input class="color-green" type="number" id="itemPrice" name="itemPrice" step="0.01" placeholder="75.50" required>
+        <input type="number" id="itemPrice" name="itemPrice" step="0.01" placeholder="75.50" required>
     </div>
     <button type="submit">Add Item</button>
 </form>
@@ -44,18 +44,22 @@
 <hr>
 
 <h2>Current Collection</h2>
-{{#items}}
-    <div>
-        <h3>{{name}} (ID: {{id}})</h3>
-        <p>{{description}}</p>
-        <p><strong>Price: ${{price}}</strong></p>
-        <p>{{lastOffer}}</p>
-    </div>
-    <hr>
-{{/items}}
+
+<div class="collection-grid">
+    {{#items}}
+        <div class="item-card">
+            <h3>{{name}} </h3>
+            <p>{{description}}</p>
+            <p><strong>Price: ${{price}}</strong></p>
+            <p>{{lastOffer}}</p>
+        </div>
+    {{/items}}
+</div>
 
 {{^items}}
-    <p>No items in the collection yet. Add one above!</p>
+    <div class="empty-state">
+        <p>No items in the collection yet. Add one above!</p>
+    </div>
 {{/items}}
 </body>
 </html>
