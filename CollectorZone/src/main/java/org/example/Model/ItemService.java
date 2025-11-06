@@ -38,7 +38,13 @@ public class ItemService {
         item5.setDescription("Un jersey autografiado por el legendario rapero Snoop Dogg");
         item5.setPrice(355.67);
 
-        List.of(item1, item2, item3, item4, item5)
+        CollectibleItem item6 = new CollectibleItem();
+        item6.setId(UUID.randomUUID().toString());
+        item6.setName("Gorra firmado por Snoop Dogg");
+        item6.setDescription("Un jersey autografiado por el legendario rapero Snoop Dogg");
+        item6.setPrice(480.4);
+
+        List.of(item1, item2, item3, item4, item5, item6)
                 .forEach(i -> itemDatabase.put(i.getId().toString(), i));
     }
 

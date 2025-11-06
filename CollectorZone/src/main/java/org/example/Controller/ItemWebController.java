@@ -8,9 +8,11 @@ import org.example.dto.ItemWebResponse;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.Session;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemWebController {
 
@@ -25,21 +27,31 @@ public class ItemWebController {
 
     /**
      * Handles GET /items-web
-     * Shows the main page with the form and the list of items.
+     * Muestra la página principal con filtros, notificaciones y la lista de artículos.
      */
     public String showItemsPage(Request req, Response res) {
 
         Map<String, Object> model = new HashMap<>();
 
-        String error = req.queryParams("error");
-        if (error != null && !error.isEmpty()) {
-            model.put("error", error);
+        Session session = req.session(false);
+        if (session != null) {
+
+            String success = session.attribute("successMessage");
+            if (success != null) {
+                model.put("success", success);
+                session.removeAttribute("successMessage");
+            }
+
+            String error = session.attribute("errorMessage");
+            if (error != null) {
+                model.put("error", error);
+                session.removeAttribute("errorMessage");
+            }
         }
 
-        String success = req.queryParams("success");
-        if (success != null && !success.isEmpty()) {
-            model.put("success", success);
-        }
+        String search = req.queryParams("search");
+        String minPriceStr = req.queryParams("minPrice");
+        String maxPriceStr = req.queryParams("maxPrice");
 
         Collection<CollectibleItem> allItems = itemService.getAllItems();
 
@@ -51,21 +63,57 @@ public class ItemWebController {
             itemWeb.setPrice(i.getPrice());
             Optional<Offer> lastOffer = offerService.getLastOffer(UUID.fromString(i.getId()));
             lastOffer.ifPresent(offer -> itemWeb.setLastOffer(offer.getPrice()));
-
             return itemWeb;
-        }).toList();
+        }).collect(Collectors.toList());
+
+        if (search != null && !search.isEmpty()) {
+            String finalSearch = search.toLowerCase();
+            itemsWeb = itemsWeb.stream()
+                    .filter(item ->
+                            item.getName().toLowerCase().contains(finalSearch) ||
+                                    item.getDescription().toLowerCase().contains(finalSearch)
+                    )
+                    .collect(Collectors.toList());
+        }
+
+        if (minPriceStr != null && !minPriceStr.isEmpty()) {
+            try {
+                double minPrice = Double.parseDouble(minPriceStr);
+                itemsWeb = itemsWeb.stream()
+                        .filter(item -> {
+                            double displayPrice = Math.max(item.getPrice(), item.getLastOffer());
+                            return displayPrice >= minPrice;
+                        })
+                        .collect(Collectors.toList());
+            } catch (NumberFormatException e) { }
+        }
+
+        if (maxPriceStr != null && !maxPriceStr.isEmpty()) {
+            try {
+                double maxPrice = Double.parseDouble(maxPriceStr);
+                itemsWeb = itemsWeb.stream()
+                        .filter(item -> {
+                            double displayPrice = Math.max(item.getPrice(), item.getLastOffer());
+                            return displayPrice <= maxPrice;
+                        })
+                        .collect(Collectors.toList());
+            } catch (NumberFormatException e) { }
+        }
+
 
         model.put("items", itemsWeb);
 
+        model.put("search", search);
+        model.put("minPrice", minPriceStr);
+        model.put("maxPrice", maxPriceStr);
+
         ModelAndView mav = new ModelAndView(model, "items.mustache");
-
-
         return templateEngine.render(mav);
     }
 
     /**
      * Handles POST /items-web
-     * Processes the "Add New Item" form.
+     * Procesa el formulario "Add New Item".
      */
     public String handleItemForm(Request req, Response res) {
         String name = req.queryParams("itemName");
@@ -73,14 +121,15 @@ public class ItemWebController {
         String imageUrl = req.queryParams("itemImageUrl");
         double price = Double.parseDouble(req.queryParams("itemPrice"));
 
-
         String id = UUID.randomUUID().toString().substring(0, 8);
         CollectibleItem newItem = new CollectibleItem(id, name, description, price);
 
         itemService.createItem(id, newItem);
 
+        req.session(true);
+        req.session().attribute("successMessage", "New item '" + name + "' added successfully!");
 
         res.redirect("/items-web");
-        return null; // The redirect handles the response
+        return null;
     }
 }

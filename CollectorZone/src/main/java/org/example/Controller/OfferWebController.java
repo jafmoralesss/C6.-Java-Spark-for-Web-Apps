@@ -33,13 +33,20 @@ public class OfferWebController {
 
             offerService.createOffer(newOffer);
 
-            res.redirect("/items-web?success=Offer submitted successfully!");
+            req.session(true);
+            req.session().attribute("successMessage", "Offer submitted successfully.");
+            res.redirect("/items-web");
 
 
         } catch (ApiException e){
-            res.redirect("/items-web?error=" + e.getMessage());
+            req.session(true);
+            req.session().attribute("errorMessage", e.getMessage());
+            res.redirect("/items-web");
+
         } catch (NumberFormatException e) {
-            res.redirect("/items-web?error=Invalid price format");
+            req.session(true);
+            req.session().attribute("errorMessage", "Invalid price format");
+            res.redirect("/items-web");
         }
 
         return null;

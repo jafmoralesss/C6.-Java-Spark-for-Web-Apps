@@ -256,3 +256,62 @@ dialog::backdrop {
     max-width: 600px;
     margin: 20px auto;
 }
+
+.filter-form {
+    /* Reutilizamos el efecto de cristal */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    padding: 25px;
+
+    /* Diseño flexible para alinear campos */
+    display: flex;
+    flex-wrap: wrap; /* Permite que los campos bajen en pantallas pequeñas */
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+
+    max-width: 900px; /* Puedes ajustar esto */
+    margin: 20px auto;
+}
+
+.filter-group {
+    flex: 1; /* Cada grupo de filtro crecerá */
+    min-width: 180px; /* Ancho mínimo antes de envolver */
+}
+
+.filter-form label {
+    font-weight: bold;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.filter-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    font-size: 1em;
+}
+
+.filter-form button {
+    background: #2575fc; /* Un azul que combina */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    height: 48px; /* Alinea la altura con los inputs */
+}
+
+.filter-form button:hover {
+    background-color: #1a5cbf;
+}
